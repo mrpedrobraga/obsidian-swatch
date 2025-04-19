@@ -2,5 +2,19 @@
     display: flex;
     flex-wrap: 1;
     gap: 0;
-    margin: 1em;
+    margin: var(--size-4-4);
+}
+
+.palette-inline {
+    text-decoration: underline;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--size-4-1);
+}
+
+.readonly-swatch {
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    border-radius: 50%;
 }
