@@ -26,7 +26,8 @@ export default class ColorSwatchPlugin extends Plugin {
 				swatch.value = color;
 				swatch.onblur = (event) => {
 					const newColor = (event.target as HTMLInputElement)['value'] ?? swatch.value;
-	
+					if (newColor == color) return;
+
 					const view = this.app.workspace.getActiveViewOfType(MarkdownView);
 					const info = ctx.getSectionInfo(el);
 					if (info) {
