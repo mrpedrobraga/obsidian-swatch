@@ -1,4 +1,4 @@
-import { ItemView, MarkdownView, Notice, Plugin } from 'obsidian';
+import { ItemView, MarkdownView, Notice, Plugin, TFile } from 'obsidian';
 import { CanvasData } from 'obsidian/canvas';
 
 export default class ColorSwatchPlugin extends Plugin {
@@ -36,6 +36,7 @@ export default class ColorSwatchPlugin extends Plugin {
 					codeblock.replaceWith(paletteEl);
 					const span = paletteEl.createSpan({ text });
 					
+					// Honestly, I just think it's impossible to reliably track which Markdown piece of text originated this code block.
 					//const swatch = paletteEl.createEl('input', { type: 'color', value: text });
 					//swatch.onchange = ev => {
 					//	
@@ -55,7 +56,7 @@ export default class ColorSwatchPlugin extends Plugin {
 			colors.forEach((color, index) => {
 				let swatch = paletteElement.createEl('input', { type: 'color' });
 				swatch.value = color;
-				swatch.onchange = (event) => {
+				swatch.onchange = async (event) => {
 					const newColor = (event.target as HTMLInputElement)['value'] ?? swatch.value;
 					if (newColor == color) return;
 
@@ -64,7 +65,7 @@ export default class ColorSwatchPlugin extends Plugin {
 						// Make it work inside canvas!!!
 						if (view.getViewType() == "canvas") {
 							const canvas: CanvasData = (view as any).canvas;
-							canvas.nodes.forEach((node: any) => {
+							canvas.nodes.forEach(async (node: any) => {
 								if ((node.contentEl as HTMLElement).contains(swatch)) {
 									if (node.text) {
 										let info = ctx.getSectionInfo(el);
@@ -80,10 +81,15 @@ export default class ColorSwatchPlugin extends Plugin {
 										}
 									}
 
-									if (node.file) {
-										// Implement code for editing embedded markdown from within other views.
-										console.log(node);
-										return;
+									if (node.file && node.file instanceof TFile) {
+										const info = ctx.getSectionInfo(el);
+										const fileContent = await this.app.vault.read(node.file);
+										const lines = fileContent.split('\n');
+										if (info) {
+											const lineToEdit = info.lineStart + 1 + index;
+											lines[lineToEdit] = newColor;
+											await this.app.vault.modify(node.file, lines.join('\n'));
+										}
 									}
 								};
 							});
