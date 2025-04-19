@@ -2,8 +2,6 @@
 
 Visualize colours inside your document.
 
-https://github.com/user-attachments/assets/6f989ff0-b707-4097-b17d-2e8c17e7d951
-
 ## Inline Swatch
 Add a 7-character hex-encoded color to an inline code block to render a cute swatch by its side.
 
