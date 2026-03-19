@@ -7,12 +7,13 @@ Add a 7-character hex-encoded color to an inline code block to render a cute swa
 
 ## Palette Swatches
 To render a palette with the `colors` language, then add the colours inside.
-\`\`\`colors
+````md
+```colors
 #0000FF 
 #00FF00 
 #FF0000 
-\`\`\`
-
+```
+````
 These swatches can be _edited_ in Live Preview.
 
 ## Paste Command
